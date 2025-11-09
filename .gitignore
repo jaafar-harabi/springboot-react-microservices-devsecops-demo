@@ -1,0 +1,22 @@
+# Maven / Java
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+.idea/
+*.log
+
+# Node (for React frontend)
+node_modules/
+dist/
+.env
+.env.local
+
+# OS / IDE junk
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
