@@ -1,0 +1,7 @@
+spring:
+  application: { name: auth-service }
+  datasource: { url: jdbc:h2:mem:authdb;DB_CLOSE_DELAY=-1, username: sa, password: "" }
+server: { port: 0 }
+eureka: { client: { service-url: { defaultZone: http://discovery-service:8761/eureka } } }
+security:
+  jwt: { secret: ${JWT_SECRET:dev-jwt-secret-change-me-32-bytes-minimum}, ttl-ms: 3600000 }

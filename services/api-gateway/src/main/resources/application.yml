@@ -1,0 +1,21 @@
+server: { port: 8080 }
+eureka: { client: { service-url: { defaultZone: http://discovery-service:8761/eureka } } }
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]': { allowedOrigins: ['*'], allowedMethods: ['GET','POST','PUT','DELETE'], allowedHeaders: ['*'] }
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates: [ Path=/auth/** ]
+        - id: task-service
+          uri: lb://task-service
+          predicates: [ Path=/api/tasks/** ]
+          filters: [ StripPrefix=1 ]
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: ${JWT_SECRET:dev-jwt-secret-change-me-32-bytes-minimum}

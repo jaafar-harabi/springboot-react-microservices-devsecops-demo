@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>springboot-react-microservices-devsecops-demo</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>services/discovery-service</module>
+    <module>services/api-gateway</module>
+    <module>services/auth-service</module>
+    <module>services/task-service</module>
+  </modules>
+  <properties>
+    <java.version>17</java.version>
+    <spring-cloud.version>2023.0.3</spring-cloud.version>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type><scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>
