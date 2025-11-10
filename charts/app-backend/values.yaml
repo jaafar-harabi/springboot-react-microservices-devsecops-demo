@@ -1,0 +1,6 @@
+image: { repository: backend, tag: local }
+service: { port: 8080, targetPort: 8080 }
+env:
+  SPRING_PROFILES_ACTIVE: docker
+  JWT_SECRET: "devsecretdevsecretdevsecretdevsecret"
+ingress: { enabled: false }

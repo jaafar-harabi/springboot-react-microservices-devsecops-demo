@@ -1,0 +1,7 @@
+apiVersion: v2
+name: app-backend
+version: 0.1.0
+dependencies:
+  - name: libsvc
+    version: 0.1.0
+    repository: "file://../libsvc"
