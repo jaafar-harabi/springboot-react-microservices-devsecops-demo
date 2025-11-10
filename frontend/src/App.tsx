@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import { api } from './api';
 
-function App() {
-  const [count, setCount] = useState(0)
+type Task = { id: number; title: string; done: boolean; createdAt: string };
+
+export default function App() {
+  const [items, setItems] = useState<Task[]>([]);
+  const [title, setTitle] = useState('');
+  async function load() { setItems(await api.tasksList()); }
+  useEffect(()=>{ load(); }, []);
+  async function add() { if(!title.trim()) return; await api.tasksCreate(title.trim()); setTitle(''); await load(); }
+  async function toggle(t: Task){ await api.tasksUpdate(t.id, t.title, !t.done); await load(); }
+  async function del(id: number){ await api.tasksDelete(id); await load(); }
+  function logout(){ localStorage.removeItem('token'); location.href='/login'; }
 
   return (
-    <>
+    <div style={{ maxWidth: 680, margin: '40px auto', fontFamily: 'sans-serif' }}>
+      <h2>Tasks</h2>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <input placeholder="new task" value={title} onChange={e=>setTitle(e.target.value)} />
+        <button onClick={add}>Add</button>
+        <button onClick={logout} style={{float:'right'}}>Logout</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <ul>
+        {items.map(t=>(
+          <li key={t.id}>
+            <label>
+              <input type="checkbox" checked={t.done} onChange={()=>toggle(t)} />
+              {t.title}
+            </label>
+            <button onClick={()=>del(t.id)} style={{marginLeft: 8}}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
-
-export default App
