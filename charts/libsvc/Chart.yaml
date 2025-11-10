@@ -1,0 +1,5 @@
+apiVersion: v2
+name: libsvc
+description: Library chart with reusable K8s primitives
+type: library
+version: 0.1.0

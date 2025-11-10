@@ -1,0 +1,22 @@
+image: { repository: "", tag: "latest", pullPolicy: IfNotPresent }
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+env: {}
+envFrom: []
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+ingress:
+  enabled: false
+  className: ""
+  hosts: []
+  tls: []
+
+podAnnotations: {}

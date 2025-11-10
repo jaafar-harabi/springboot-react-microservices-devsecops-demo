@@ -1,0 +1,3 @@
+{{- include "libsvc.deployment" . }}
+---
+{{- include "libsvc.service" . }}
