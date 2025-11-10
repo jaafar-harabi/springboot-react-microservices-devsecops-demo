@@ -1,0 +1,4 @@
+image: { repository: frontend, tag: local }
+service: { port: 80, targetPort: 80 }
+env: {}
+ingress: { enabled: false }
