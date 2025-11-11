@@ -1,11 +1,18 @@
-package com.example.task.service;
+package com.demo.task.service;
 
-import com.example.task.entity.Task;
-import com.example.task.repository.TaskRepository;
+import com.demo.task.api.dto.TaskCreateDto;
+import com.demo.task.api.dto.TaskDto;
+import com.demo.task.api.dto.TaskUpdateDto;
+import com.demo.task.domain.TaskStatus;
+import com.demo.task.repo.TaskRepository;
+import com.demo.task.domain.Task;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class TaskService {
 
   private final TaskRepository repo;
@@ -14,18 +21,30 @@ public class TaskService {
     this.repo = repo;
   }
 
-  public List<Task> list() { return repo.findAll(); }
-
-  public Task create(String title) { return repo.save(new Task(title)); }
-
-  public Task get(Long id) { return repo.findById(id).orElseThrow(); }
-
-  public Task update(Long id, String title, boolean done) {
-    Task t = get(id);
-    t.setTitle(title);
-    t.setDone(done);
-    return repo.save(t);
+  @Transactional(readOnly = true)
+  public Page<TaskDto> list(Pageable pageable, TaskStatus status) {
+    if (status == null) return repo.findAll(pageable).map(TaskDto::of);
+    return repo.findByStatus(status, pageable).map(TaskDto::of);
   }
 
-  public void delete(Long id) { repo.deleteById(id); }
+  public TaskDto create(TaskCreateDto in) {
+    Task saved = repo.save(in.toEntity());
+    return TaskDto.of(saved);
+  }
+
+  @Transactional(readOnly = true)
+  public TaskDto get(Long id) {
+    Task t = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
+    return TaskDto.of(t);
+  }
+
+  public TaskDto update(Long id, TaskUpdateDto in) {
+    Task t = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
+    in.apply(t);
+    return TaskDto.of(t);
+  }
+
+  public void delete(Long id) {
+    repo.deleteById(id);
+  }
 }
