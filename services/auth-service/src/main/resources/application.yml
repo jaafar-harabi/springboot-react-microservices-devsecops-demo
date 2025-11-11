@@ -1,7 +1,24 @@
+server:
+  port: 9000
+
 spring:
-  application: { name: auth-service }
-  datasource: { url: jdbc:h2:mem:authdb;DB_CLOSE_DELAY=-1, username: sa, password: "" }
-server: { port: 0 }
-eureka: { client: { service-url: { defaultZone: http://discovery-service:8761/eureka } } }
-security:
-  jwt: { secret: ${JWT_SECRET:dev-jwt-secret-change-me-32-bytes-minimum}, ttl-ms: 3600000 }
+  application:
+    name: auth-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+# Expose standard endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+# Issuer used by resource servers / gateway
+spring:
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:9000

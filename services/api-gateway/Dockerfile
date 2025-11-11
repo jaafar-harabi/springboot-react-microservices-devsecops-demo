@@ -1,13 +1,13 @@
-FROM maven:3.9.9-eclipse-temurin-17 AS build
-WORKDIR /app
-COPY pom.xml ./
-RUN mvn -q -DskipTests dependency:go-offline
-COPY src ./src
-RUN mvn -q -DskipTests package
+# syntax=docker/dockerfile:1
+FROM eclipse-temurin:21-jdk-alpine AS build
+WORKDIR /src
+COPY . .
+RUN ./mvnw -q -DskipTests package || mvn -q -DskipTests package
+RUN mkdir -p /out && cp target/*SNAPSHOT.jar /out/app.jar
 
-FROM eclipse-temurin:17-jre-alpine
+FROM gcr.io/distroless/java21-debian12
 WORKDIR /app
-ENV JWT_SECRET=dev-jwt-secret-change-me-32-bytes-minimum
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /out/app.jar /app/app.jar
+USER 65532:65532
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]
