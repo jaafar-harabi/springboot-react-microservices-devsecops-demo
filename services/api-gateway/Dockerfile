@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM eclipse-temurin:21.0.9_10-jdk-alpine AS build
 WORKDIR /src
 COPY . .
 RUN ./mvnw -q -DskipTests package || mvn -q -DskipTests package
